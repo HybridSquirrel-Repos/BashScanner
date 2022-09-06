@@ -1,0 +1,315 @@
+#!/bin/bash
+
+#
+# A abstraction layer script for nmap
+# Flag modes are replaced with number selections
+# Argument flags are either filled in or uses string number to process
+#
+# Execute script
+# sudo ./bashscanner <ip>
+#
+
+
+
+
+SynScan () {
+  local command="sudo nmap -sS"
+
+  echo "1:DNS Resolution On 2:DNS Resolution off 3:Enable UDP 4:OS Detection 5:Get Report "
+  read synscanoption
+
+  local loopcount=$(expr length "$synscanoption")
+
+  for i in $( seq 0 $loopcount) 
+  do
+    if [[ "$synscanoption" == *"1"* ]]; then
+      if [[ "$synscanoption" == *"2"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -R"
+        synscanoption="${synscanoption:1}"
+      fi
+    elif [[ "$synscanoption" == *"2"* ]]; then
+      if [[ "$synscanoption" == *"1"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -n"
+        synscanoption="${synscanoption:1}"
+      fi
+    elif [[ "$synscanoption" == *"3"* ]]; then
+      command="${command} -sU"
+      synscanoption="${synscanoption:1}"
+    elif [[ "$synscanoption" == *"4"* ]]; then
+      command="${command} -O"
+      synscanoption="${synscanoption:1}"
+    elif [[ "$synscanoption" == *"5"* ]]; then
+      command="${command} -oX report.xml"
+      synscanoption="${synscanoption:1}"
+    else
+      echo
+    fi
+  done
+
+  command="${command} $1"
+  echo $command
+  eval $command
+  if [[ "$command" == *"-oX"* ]]; then
+    xsltproc report.xml -o report.html
+  fi
+  exit 0
+}
+
+
+AckScan ()
+{
+  
+  local command="sudo nmap -sA"
+
+  echo "1:DNS Resolution On 2:DNS Resolution off 3:Enable UDP 4:OS Detection 5:Get Report "
+  read ackscanoption
+
+  local loopcount=$(expr length "$ackscanoption")
+
+  for i in $( seq 0 $loopcount) 
+  do
+    if [[ "$ackscanoption" == *"1"* ]]; then
+      if [[ "$ackscanoption" == *"2"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -R"
+        ackscanoption="${ackscanoption:1}"
+      fi
+    elif [[ "$ackscanoption" == *"2"* ]]; then
+      if [[ "$ackscanoption" == *"1"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -n"
+        ackscanoption="${ackscanoption:1}"
+      fi
+    elif [[ "$ackscanoption" == *"3"* ]]; then
+      command="${command} -sU"
+      ackscanoption="${ackscanoption:1}"
+    elif [[ "$ackscanoption" == *"4"* ]]; then
+      command="${command} -O"
+      ackscanoption="${ackscanoption:1}"
+    elif [[ "$ackscanoption" == *"5"* ]]; then
+      command="${command} -oX report.xml"
+      ackscanoption="${ackscanoption:1}"
+    else
+      echo
+    fi
+  done
+
+
+  command="${command} $1"
+  echo $command
+  eval $command
+  if [[ "$command" == *"-oX"* ]]; then
+    xsltproc report.xml -o report.html
+  fi
+  exit 0
+}
+
+
+PingScan ()
+{
+
+  local command="sudo nmap -sn"
+
+  echo "1:DNS Resolution On 2:DNS Resolution off 3:Enable UDP 4:Echo 5:Timestamp 6:Netmask 7:Get Report "
+  read pingscanoption
+
+  local loopcount=$(expr length "$pingscanoption")
+
+  for i in $( seq 0 $loopcount) 
+  do
+    if [[ "$pingscanoption" == *"1"* ]]; then
+      if [[ "$pingscanoption" == *"2"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -R"
+        pingscanoption="${pingscanoption:1}"
+      fi
+    elif [[ "$pingscanoption" == *"2"* ]]; then
+      if [[ "$pingscanoption" == *"1"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -n"
+        pingscanoption="${pingscanoption:1}"
+      fi
+    elif [[ "$pingscanoption" == *"3"* ]]; then
+      command="${command} -sU"
+      pingscanoption="${pingscanoption:1}"
+    
+    elif [[ "$pingscanoption" == *"4"* ]]; then
+
+      if [[ "$pingscanoption" == *"5"* ]]; then
+        echo "Cant combine options Echo and Timestamp"
+        exit 1
+      elif [[ "$pingscanoption" == *"6"* ]]; then
+        echo "Cant combine options Echo and Netmask"
+        exit 1
+      else
+        command="${command} -PE"
+        pingscanoption="${pingscanoption:1}"
+      fi
+
+          elif [[ "$pingscanoption" == *"5"* ]]; then
+      if [[ "$pingscanoption" == *"4"* ]]; then
+        echo "Cant combine options Timestamp and Echo"
+        exit 1
+      elif [[ "$pingscanoption" == *"6"* ]]; then
+        echo "Cant combine options Timestamp and Netmask"
+        exit 1
+      else
+        command="${command} -PP"
+        pingscanoption="${pingscanoption:1}"
+      fi
+
+    elif [[ "$pingscanoption" == *"6"* ]]; then
+
+
+      if [[ "$pingscanoption" == *"4"* ]]; then
+        echo "Cant combine options Netmask and Echo"
+        exit 1
+      elif [[ "$pingscanoption" == *"5"* ]]; then
+        echo "Cant combine options Netmask and Timestamp"
+        exit 1
+      else
+        command="${command} -PM"
+        pingscanoption="${pingscanoption:1}"
+
+      fi
+
+    elif [[ "$pingscanoption" == *"7"* ]]; then
+      command="${command} -oX report.xml"
+      pingscanoption="${pingscanoption:1}"
+    else
+      echo
+    fi
+  done
+
+  command="${command} $1"
+  echo $command
+  eval $command
+  if [[ "$command" == *"-oX"* ]]; then
+    xsltproc report.xml -o report.html
+  fi
+  exit 0
+ 
+}
+
+
+PortScan (){
+   local command="sudo nmap"
+
+  echo "1:DNS Resolution On 2:DNS Resolution off 3:Enable UDP 4:OS Detection 5:Get Report "
+  read portscanoption
+
+  local loopcount=$(expr length "$portscanoption")
+
+  for i in $( seq 0 $loopcount) 
+  do
+    if [[ "$portscanoption" == *"1"* ]]; then
+      if [[ "$portscanoption" == *"2"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -R"
+        portscanoption="${portscanoption:1}"
+      fi
+    elif [[ "$portscanoption" == *"2"* ]]; then
+      if [[ "$portscanoption" == *"1"* ]]; then
+        echo "Command cant contain both DNS option"
+        exit 1
+      else
+        command="${command} -n"
+        portscanoption="${portscanoption:1}"
+      fi
+    elif [[ "$portscanoption" == *"3"* ]]; then
+      command="${command} -sU"
+      portscanoption="${portscanoption:1}"
+    elif [[ "$portscanoption" == *"4"* ]]; then
+      command="${command} -O"
+      portscanoption="${portscanoption:1}"
+    elif [[ "$portscanoption" == *"5"* ]]; then
+      command="${command} -oX report.xml"
+      portscanoption="${portscanoption:1}"
+    else
+      echo
+    fi
+  done
+
+  command="${command} $1"
+  echo $command
+  eval $command
+  if [[ "$command" == *"-oX"* ]]; then
+    xsltproc report.xml -o report.html
+  fi
+  exit 0
+ 
+}
+
+
+
+
+options ()
+{
+  PS3="Select the operation: "
+
+  select opt in SynScan AckScan PingScan PortScan quit; do
+
+    case $opt in
+      SynScan)
+        SynScan "$1" ;;
+      AckScan)
+        AckScan "$1";;
+      PingScan)
+        PingScan "$1" ;;
+      PortScan)
+        PortScan "$1" ;;
+      quit)
+        break ;;
+      *) 
+        echo "Invalid option $REPLY";;
+    esac
+  done
+
+
+}
+
+if [[ "$EUID" = 0 ]]; then 
+  # Install nescery packages, Nmap and xsltproc
+  if [[ $(apt list | grep 'nmap/' | grep -c 'installed') -ne 1 ]]; then
+    sudo apt install nmap -y
+    sudo apt install xsltproc -y
+    echo "Nmap and xsltproc installed, rerun the script" 
+  else
+    if [[ "$1" ]]; then
+      # Runs the main logic
+      options "$1"
+    else
+    # Checks if ip argument is passed
+      echo "Script need a ip argument, example: bashscanner 192.168.0.2" 
+    fi
+  fi
+else
+  echo "This script need sudo to run!"
+  exit 1
+fi
+
+
+
+
+
+# Os detection nmap -O only port no pingonlyscan
+
+# -sU 
+# sort as an Option not a scantype, bcuz can combine with sS, sA etc,
+# Do not combine with -sn
