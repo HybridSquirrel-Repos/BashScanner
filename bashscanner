@@ -8,7 +8,12 @@
 # Execute script
 # sudo ./bashscanner <ip>
 #
-
+# We choose to write a abstraction layer because it simplifies the task, faster to write and makes it normi friendly
+# and why should you reinvent the wheel again :P 
+#
+# Script creator: HybridSquirrel
+# Group: RoGuSiMa
+#
 
 
 
@@ -304,12 +309,3 @@ else
   exit 1
 fi
 
-
-
-
-
-# Os detection nmap -O only port no pingonlyscan
-
-# -sU 
-# sort as an Option not a scantype, bcuz can combine with sS, sA etc,
-# Do not combine with -sn
