@@ -290,7 +290,7 @@ options ()
 }
 
 if [[ "$EUID" = 0 ]]; then 
-  # Install nescery packages, Nmap and xsltproc
+  # Install necessary packages, Nmap and xsltproc
   if [[ $(apt list | grep 'nmap/' | grep -c 'installed') -ne 1 ]]; then
     sudo apt install nmap -y
     sudo apt install xsltproc -y
